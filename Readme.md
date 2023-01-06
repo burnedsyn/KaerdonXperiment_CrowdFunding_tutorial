@@ -2006,12 +2006,34 @@ const CreateCampaign = () => {
   });
 
   return (
-    <div className='bg-secondary flex justify-center items-center flex-col rounded[10px] sm:p-10 p-4'>CreateCampaign</div>
+    <div className='bg-secondary flex justify-center items-center flex-col rounded[10px] sm:p-10 p-4 shadow-[-3px_-3px_8px_5px_#51beef33]  '>CreateCampaign</div>
   )
 }
 
 export default CreateCampaign
 
+
+```
+
+
+but now we will just change the overall feeling of the app, so open the file  tailwind.config.js and replace the two following line
+
+primary: '#000000' ,
+secondary:'#070c15ad' ,
+
+now inside sidebar.jsx, we will modify the following code:
+
+```javascript
+ </Link>
+        <div className="flex-1 flex flex-col justify-between items-center bg-secondary rounded-[20px] w-[76px] py-4 mt-12">
+```
+
+and add the following code:
+shadow-[-3px_-3px_8px_5px_#51beef33] 
+
+```javascript
+</Link>
+        <div className="flex-1 flex flex-col justify-between items-center bg-secondary rounded-[20px] w-[76px] py-4 mt-12 shadow-[-3px_-3px_8px_5px_#51beef33]  ">
 
 ```
 

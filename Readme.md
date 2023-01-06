@@ -69,9 +69,14 @@ To create a node you need to register an account on QuickNode and then create a 
 Boot your QuickNode in seconds and get access to 16+ different chains. Their globally distributed, auto-scaling, multi-cloud network will carry you from MVP all the way to enterprise. [QuickNode signup](https://www.quicknode.com/signup "QuickNode") 
 
 
-```
-MVP stands for Minimum Viable Product. In this context, it refers to a stage in the development process where the product has the minimum set of features necessary to be functional and can be used to test and validate the concept with potential customers. The idea is to get the product to market as quickly as possible in order to gather feedback and iterate on the product before investing too much time and resources into development. The goal is to get the product to the point where it can be used to demonstrate its value and attract funding or customers.
-```
+
+MVP stands for Minimum Viable Product. In this context, it refers to a stage in the development process where the product has the minimum set of features necessary 
+
+to be functional and can be used to test and validate the concept with potential customers. 
+The idea is to get the product to market as quickly as possible in order to gather feedback and iterate on the product before investing too much time and resources 
+
+into development. The goal is to get the product to the point where it can be used to demonstrate its value and attract funding or customers.
+
 
 ### Recommended IDE
 

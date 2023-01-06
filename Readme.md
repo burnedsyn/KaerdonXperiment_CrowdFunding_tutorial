@@ -1,17 +1,17 @@
 <link rel="stylesheet" href="./myStyle.css">
 
 
-# Building a secure and trustworthy Web3 Crowdfunding Platform with QuickNode, Solidity, Orbis Protocol and Krebit protocol and reputation passport
+# Building a secure and trustworthy Web3 Crowdfunding Platform with QuickNode, Solidity, Orbis Protocol and verifiable credentials.
 
-#### vous pouvez aussi lire ce tutoriel en français ici: [Créer une plateforme de financement participatif Web3 sécurisée et digne de confiance avec QuickNode, Solidity, le Protocol Orbis, le passeport de réputation et le protocol Krebit](./Tutorial_fr.md "Version française")
+#### vous pouvez aussi lire ce tutoriel en français ici: [Créer une plateforme de financement participatif Web3 sécurisée et digne de confiance avec QuickNode, Solidity, le Protocol Orbis et les informations d'identification vérifiables](./Tutorial_fr.md "Version française")
 
 ## Introduction 
 
-Welcome to this tutorial on building a secure and trustworthy web3 crowdfunding platform using QuickNode, React, Solidity, the Orbis Protocol, and the krebit Protocol.
+Welcome to this tutorial on building a secure and trustworthy web3 crowdfunding platform using QuickNode, React, Solidity, the Orbis Protocol.
 
 In this tutorial, you will learn how to create a full-fledged web3.0 application that allows users to send transactions through the blockchain to support crowdfunding campaigns. We will use React to build the frontend of the platform, and Solidity to write smart contracts on the Ethereum network that handle web3 functionality. To connect the platform to the Ethereum network, we will use QuickNode. Additionally, we will use the Orbis Protocol to add social features such as a newsfeed, messaging, and the ability to follow other users.
 
-To ensure the security and reputation of our platform and its users, we will also be implementing the W3C Verifiable Credentials protocol by krebit.id and the krebit Reputation Passport. These tools will allow us to validate campaign creators and use verifiable credentials to ensure the integrity of our platform.
+To ensure the security and reputation of our platform and its users, we will also be implementing the W3C Verifiable Credentials protocol by orbis. These tools will allow us to validate campaign creators and use verifiable credentials to ensure the integrity of our platform.
 
 I am excited to guide you through using these tools and technologies to build a secure, trustworthy platform that also includes social features. Let's get started on creating an amazing web3 crowdfunding platform together!
 
@@ -41,8 +41,7 @@ I am excited to guide you through using these tools and technologies to build a 
 
 * Community: A web3 crowdfunding platform with social features can help to build a sense of community among users, which can be a valuable asset for both campaign creators and donors. By allowing users to connect with each other and discuss their campaigns, the platform can become a hub of activity and engagement.
 
-***Overall, building a web3 crowdfunding platform with a reputation passport can be a good thing because it can offer a decentralized, secure, accessible, inclusive, trustworthy, social and transparent environment for crowdfunding activities. 
-This can help to make crowdfunding more efficient, effective, building confidence in the platform and encourage more people to participate, which can ultimately lead to more successful campaigns and a stronger community.***
+**Overall, building a web3 crowdfunding platform with a reputation passport can be a good thing because it can offer a decentralized, secure, accessible, inclusive, trustworthy, social and transparent environment for crowdfunding activities. <br>This can help to make crowdfunding more efficient, effective, building confidence in the platform and encourage more people to participate, which can ultimately lead to more successful campaigns and a stronger community.**
 
 ## Prerequisites
 

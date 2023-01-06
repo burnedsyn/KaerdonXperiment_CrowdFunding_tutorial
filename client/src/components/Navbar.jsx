@@ -13,18 +13,18 @@ const Navbar = () => {
 
 
   return (
-    <div className="flex md:flex-row flex-col-reverse justify-between mb-[35px] gap-6">
-      <div className="lg:flex-1 flex flex-row max-w-[458px] py-2 pl-4 pr-2 h-[52px] bg-secondary rounded-[100px]">
+    <div className="flex md:flex-row flex-col-reverse justify-between mb-[35px] gap-6 ">
+      <div className="lg:flex-1 flex flex-row max-w-[458px] py-2 pl-4 pr-2 h-[52px] bg-secondary rounded-[100px] shadow-custom">
       <input type="text" placeholder="Search for campaigns" className="flex w-full font-epilogue font-normal text-[14px] placeholder:text-sixth text-third bg-transparent outline-none rounded-[100px]" />
-        <div className="w-[72px] h-full rounded-[20px] bg-fourth flex justify-center items-center cursor-pointer ">
+        <div className="w-[72px] h-full rounded-[20px] bg-fourth flex justify-center items-center cursor-pointer  ">
           <img src={search} alt="search" className="w-[15px] h-[15px] rounded-[10px] object-contain" />
         </div>
       </div>
-      <div className="sm:flex hidden flex-row justify-end gap-4">
+      <div className="sm:flex hidden flex-row justify-end gap-4 ">
         <CustomButton 
           btnType="button"
           title={ address ? 'create campaign' : 'connect wallet'}  
-          styles={address ? 'bg-fourth  text-nine' : 'bg-fourth text-[#FF0000]'} 
+          styles={address ? 'bg-fourth  text-nine shadow-custom' : 'bg-fourth text-[#FF0000] shadow-custom'} 
           handleClick={() => {
             if(address) {
               navigate('/create-campaign')
@@ -34,7 +34,7 @@ const Navbar = () => {
           }}
         />
         <Link to='/profile'>
-          <div className='w-[52px] h-[52px] rounded-full flex justify-center items-center bg-secondary cursor-pointer '>
+          <div className='w-[52px] h-[52px] rounded-full flex justify-center items-center bg-secondary cursor-pointer shadow-custom'>
             <img src={old_profile} alt="" className='grayscale' />
           </div>
         </Link>

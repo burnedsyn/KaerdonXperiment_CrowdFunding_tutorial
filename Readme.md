@@ -2078,12 +2078,67 @@ So now we can take a look at our app..
 
 ![image](./images/createcampaign1.png)
 
-Now inside the div, we will be adding the form, so we add the following code:
+At this point we won't use immediately the orbis and verification protocol to code our campaign form, and we won't verify thing right now we will do that later let just focus on the form for now.<br>
+and the communication with our contract.<br>
+we have to create a new component to render our form fields, so we create a new file "src/components/FormField.jsx" and we add the following code:
 
 ```javascript
 
+import React from 'react'
+
+const FormField = () => {
+  return (
+    <div>FormField</div>
+  )
+}
+
+export default FormField
+```
+ we go to the index.js file inside the components folder and we add the following line:
+ 
+ export {default as FormField} from './FormField'
+
+and we go back to the create campaign page and we add the following code:
+
+```javascript
+import { FormField } from '../components';
 
 ```
+
+Now inside the div, we will be adding the form, so we add the following code:
+
+```javascript
+<form onSubmit={handleSubmit} className="w-full mt-[65px] flex flex-col gap-[30px]">
+       <div className="flex flex-wrap gap-[40px]">
+            <FormField 
+            labelName="your name *"
+            placeholder="Enter your name"
+            inputType="text"
+            value={form.name}
+            handlechange={() => {}}
+            />
+            <FormField 
+            labelName="Campaign Title *"
+            placeholder="Title of your campaign"
+            inputType="text"
+            value={form.title}
+            handlechange={() => {}}
+            />
+            
+        </div>     
+</form>  
+
+```
+so the onSubmit function isn't yet defined, so we will be adding it, so we add the following code defore the return statement and we just leave it empty for now: 
+
+```javascript
+
+const handleSubmit = async () => {
+    
+  }
+
+```
+
 
 
 We now go through the home page, which is the dashboard, and we will be building the campaign cards, and the campaign card details.<br>

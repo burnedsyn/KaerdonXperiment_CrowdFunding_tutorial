@@ -18,8 +18,12 @@ module.exports = {
       seventh:'#c8c7c9',
       eight: '#c1afa8',
       nine: '#1DC071',
+      white: '#ffffff',
     },
     extend: {
+      fontFamily: {
+        epilogue: ['Epilogue', 'sans-serif'],
+      },
       boxShadow: {
         'custom':'-3px -3px 8px 5px #51beef33',
       }

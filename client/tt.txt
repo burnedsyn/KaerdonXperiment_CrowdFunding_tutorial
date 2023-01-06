@@ -1,0 +1,2 @@
+primary: '#1f2d93d8'
+secondary:'#1f2d4baa'

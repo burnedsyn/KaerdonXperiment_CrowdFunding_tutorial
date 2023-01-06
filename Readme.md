@@ -1971,6 +1971,71 @@ So now we can take a look at our app..
 
 ![image](./images/applooknavbar1.png)![image](./images/applooknavbar2.png)
 
+Here we go, we have a working navbar, sort of for now, we will be back to it later on, but for now, we can move on to the next section.<br>
+Before we can display the campaigns, we need to create them, so we will be building the create campaign page.<br>
+So we open the file "src/pages/CreateCampaign.jsx" and we add the following code:
+
+
+```javascript
+import React, {useState} from 'react';
+import { useNavigate } from 'react-router-dom';
+import {ethers} from 'ethers';
+
+import { money } from '../assets';
+import { CustomButton } from '../components';
+import {checkIfImage} from '../utils';
+
+```
+
+After these imports, we can create the component so we add the following code:
+
+```javascript
+
+
+const CreateCampaign = () => {
+  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
+  const  [form, setForm] = useState({
+    name: '',
+    title: '',
+    description: '',
+    image: '',
+    target: '',
+    deadline: '',       
+
+  });
+
+  return (
+    <div className='bg-secondary flex justify-center items-center flex-col rounded[10px] sm:p-10 p-4'>CreateCampaign</div>
+  )
+}
+
+export default CreateCampaign
+
+
+```
+
+So now we can take a look at our app..
+
+![image](./images/createcampaign1.png)
+
+Now inside the div, we will be adding the form, so we add the following code:
+
+```javascript
+
+
+```
+
+
+We now go through the home page, which is the dashboard, and we will be building the campaign cards, and the campaign card details.<br>
+so we open the file "src/pages/Home.jsx" and we add the following code:
+
+```javascript
+
+
+```
+
+
 
 ## Author bio
 

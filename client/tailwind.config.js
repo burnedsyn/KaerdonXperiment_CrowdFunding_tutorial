@@ -20,7 +20,10 @@ module.exports = {
       nine: '#1DC071',
     },
     extend: {
-     }
+      boxShadow: {
+        'custom':'-3px -3px 8px 5px #51beef33',
+      }
+      }
   },
  
   plugins: [],

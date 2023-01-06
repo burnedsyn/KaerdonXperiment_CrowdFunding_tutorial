@@ -22,7 +22,7 @@ const Sidebar = () => {
         <Link to="/">
          <Icon styles=" w-[52px] h-[52px] bg-secondary" imgUrl={logo} />
         </Link>
-        <div className="flex-1 flex flex-col justify-between items-center bg-secondary rounded-[20px] w-[76px] py-4 mt-12 shadow-[-3px_-3px_8px_5px_#51beef33] ">
+        <div className="flex-1 flex flex-col justify-between items-center bg-secondary rounded-[20px] w-[76px] py-4 mt-12 shadow-custom ">
         <div className="flex flex-col justify-center items-center gap-3">
           {navlinks.map((link) => (
             <Icon 

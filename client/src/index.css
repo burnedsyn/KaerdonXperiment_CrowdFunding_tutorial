@@ -1,0 +1,23 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primary: #3c5ebb;
+  --secondary: #3a5bb8;
+  --success: #4caf50;
+  --info: #00bcd4;
+  --warning: #ff9800;
+  --danger: #f44336;
+  --light: #f1f3f4;
+  --dark: #212121;
+  --white: #fff;
+  --black: #1f1b53d8;
+
+
+
+--CloudBurst: #1f2d4b;
+--Iron: #ced0d5;
+--SteelBlue: #437eae;
+--Downy:#6c1296a9;
+}

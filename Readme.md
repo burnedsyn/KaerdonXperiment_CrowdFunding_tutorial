@@ -2006,7 +2006,7 @@ const CreateCampaign = () => {
   });
 
   return (
-    <div className='bg-secondary flex justify-center items-center flex-col rounded[10px] sm:p-10 p-4 shadow-[-3px_-3px_8px_5px_#51beef33]  '>CreateCampaign</div>
+    <div className='bg-secondary flex justify-center items-center flex-col rounded[10px] sm:p-10 p-4 shadow-custom'>CreateCampaign</div>
   )
 }
 
@@ -2020,6 +2020,43 @@ but now we will just change the overall feeling of the app, so open the file  ta
 
 primary: '#000000' ,
 secondary:'#070c15ad' ,
+and we will add the following line to extend the box-shadow definition and have one of our own
+co now the file should look like this:
+
+```javascript
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+
+  content: [
+ 
+    "./src/**/*.{js,jsx,ts,tsx}",
+ 
+  ],
+ 
+  theme: {
+    colors: {
+      primary: '#000000' ,
+      secondary:'#070c15ad' ,
+      third: '#ced0d5',
+      fourth: '#6c129650',      
+      fifth: '#ede8e4',
+      sixth:'#8a8381',
+      seventh:'#c8c7c9',
+      eight: '#c1afa8',
+      nine: '#1DC071',
+    },
+    extend: {
+      boxShadow: {
+        'custom':'-3px -3px 8px 5px #51beef33',
+      }
+      }
+  },
+ 
+  plugins: [],
+ 
+ }
+
+```
 
 now inside sidebar.jsx, we will modify the following code:
 
@@ -2029,11 +2066,11 @@ now inside sidebar.jsx, we will modify the following code:
 ```
 
 and add the following code:
-shadow-[-3px_-3px_8px_5px_#51beef33] 
+shadow-custom 
 
 ```javascript
 </Link>
-        <div className="flex-1 flex flex-col justify-between items-center bg-secondary rounded-[20px] w-[76px] py-4 mt-12 shadow-[-3px_-3px_8px_5px_#51beef33]  ">
+        <div className="flex-1 flex flex-col justify-between items-center bg-secondary rounded-[20px] w-[76px] py-4 mt-12 shadow-custom  ">
 
 ```
 

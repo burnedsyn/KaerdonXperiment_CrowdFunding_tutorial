@@ -1,3 +1,4 @@
+import { Editor } from '@tinymce/tinymce-react'
 import React from 'react'
 
 const FormField = ({labelName, placeholder, inputType, isTextArea, value, handleChange }) => {
@@ -7,7 +8,7 @@ const FormField = ({labelName, placeholder, inputType, isTextArea, value, handle
             <span className="font-epilogue font-medium text-[14px] leading-[22px] text-[#808191] mb-[10px]">{labelName}</span>
         )}
         {isTextArea ? (
-            <textarea 
+            <Editor 
             required 
             value={value}
             onChange={handleChange}

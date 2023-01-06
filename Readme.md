@@ -296,11 +296,17 @@ I recommand you to read this portion of the doc [Events documentation](https://d
 we will see later how to use the events in the front-end, and come back to this part of the code as we add others events in our contract.
 
 Since solidity 0.8.4 we can use CustomErrors to throw errors in our contract, and it is a good practice to use them instead of the require function.
-It is a good practice to use CustomErrors because it is more gas efficient and it is easier to debug the contract.
+It is a good practice to use CustomErrors because 
+
+1) it save bytecode space  
+2) it is more gas efficient  
+3) it is easier to debug the contract.
+
 you'll find more informations about custom errors here: [revert statement documentation](https://docs.soliditylang.org/en/latest/control-structures.html#revert-statement "revert statement  documentation") 
 
 and [error documentation](https://docs.soliditylang.org/en/v0.8.17/contracts.html#index-16 "error function documentation") 
-we declare a custom error called CustomError, and we will use it in our contract to throw errors.
+
+We declare  custom errors, and we will use them in our contract to throw errors.
 
 **require(condition, "error message") should be translated to if (!condition) revert CustomError().**
 
@@ -311,7 +317,9 @@ error Unauthorized(address caller);
 error DeadlineError(uint deadline);
 error CampaignStatusError(uint status);
 ```
+
 #### Constructor
+
 The constructor function is a special function that is executed only once when the contract is deployed.
 In our case we will use it to set the platformOwner variable to the address that deployed the contract.
 
@@ -326,16 +334,31 @@ Now we will add the constructor function to the MyCrowdfunding.sol file below th
         
     }
 ```
+
 #### contract functions
 
-Now it's time to add the functions that will be used in our contract to create a campaign, donate to a campaign, etc.
-we begin with the createCampaign function.
-function createCampaign (address _owner, string memory _title, string memory _description, uint256 _target, uint256 _deadline, string memory _image)  public returns (uint256)
+Now it's time to add the functions that will be used in our contract<br>
+to create a campaign,<br> donate to a campaign, etc.<br>
+we begin with the createCampaign function.<br>
 
-this function will be called by the campaign owner and will set a new campaign with all the data passed as parameters.
-these parameters will be stored in the campaigns they are declared as storage variables through the datastructure Campaign.
-we need the owner address, the title, description, target, deadline and image parameters because we need to store them in the campaign data.
-when we have set the data in the campaign structure  we update the numberOfCampaigns variable and we emit the CampaignCreated event to notify the blockchain that a new campaign has been created. and return the id of the campaign (which is now the value of numberOfCampaigns-1).
+function createCampaign (<br>
+  address _owner, <br>
+  string memory _title, <br>
+  string memory _description,<br> 
+  uint256 _target, <br>
+  uint256 _deadline, <br>
+  string memory _image <br>
+  )  public returns (uint256) {}<br>
+
+This function will be called by the campaign owner and will set a new campaign with all the data passed as parameters.
+These parameters will be stored in the campaigns[numberOfCampaigns] array of struct Campaign.
+
+They are declared as **storage** variables and packed in the datastructure Campaign.
+
+when we have set the data in the campaign structure, we update the numberOfCampaigns variable and<br>
+we emit the CampaignCreated event to notify the blockchain that a new campaign has been created.<br>
+Next we return the id of the campaign (which is now the value of numberOfCampaigns-1).
+
 So we will add the following code to the MyCrowdfunding.sol file below the constructor function:
 
 ```javascript
@@ -358,6 +381,7 @@ So we will add the following code to the MyCrowdfunding.sol file below the const
         return numberOfCampaigns-1;
     }
 ```
+
 Now we have a function to create a campaign, but we need a function to donate to a campaign too.
 
 ```javascript
@@ -386,7 +410,9 @@ function donateToCampaign (uint256 _id) public payable {
     }
 
 ```
- we add the getCampaigns and getDonators functions to the contract into the MyCrowdfunding.sol file below the createCampaign function:
+
+ we add the getCampaigns and getDonators functions to the contract.<br>
+ Into the MyCrowdfunding.sol file below the createCampaign function:
 
 ```javascript
 

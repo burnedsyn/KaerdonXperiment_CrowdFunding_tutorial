@@ -2310,6 +2310,9 @@ const CreateCampaign = () => {
 
 export default CreateCampaign
 ```
+look at this with the tiny mce rich text editor activated in it we will do it in a second.
+
+![image](./images/formcomplettinymce.png)
 
 We now go through the home page, which is the dashboard, and we will be building the campaign cards, and the campaign card details.<br>
 so we open the file "src/pages/Home.jsx" and we add the following code:

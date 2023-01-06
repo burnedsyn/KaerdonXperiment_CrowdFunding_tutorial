@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import { useNavigate } from 'react-router-dom';
 import {ethers} from 'ethers';
-import { Editor } from "@tinymce/tinymce-react";
+//import { Editor } from "@tinymce/tinymce-react";
 import { money } from '../assets';
 import { CustomButton, FormField } from '../components';
 import {checkIfImage} from '../utils';

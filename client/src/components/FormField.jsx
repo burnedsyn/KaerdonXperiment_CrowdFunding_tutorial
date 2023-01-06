@@ -15,7 +15,7 @@ const FormField = ({labelName, placeholder, inputType, isTextArea, value, handle
             rows={10}
             placeholder={placeholder}
             className="font-epilogue font-medium text-white text-[14px] leading-[22px] palceholder:text-[#4b5264] bg-[#3a3a43] rounded-[10px] px-[15px] outline-none"
-            
+            styles="tiny"
             />
         ) : (
             <input

@@ -2390,6 +2390,127 @@ there you can search for the hooks and find the documentation for each one of th
 we will need the contract address, so we go to the dashboard of thirdweb and we copy the contract address.<br>
 ![image](./images/contractaddress.png)
 
+Now we can create the context provider, and doing so we declare the contract address, and the contract.<br>
+We also declare the createCampaign function, which will be used to create a new campaign.<br>
+This function will mutate the state of the contract.<br>
+
+We then declare the two const address and connect, which are hooks that will be used to with your metamask wallet.<br>
+the useAddress hook will return the address of the connected wallet.[https://portal.thirdweb.com/react/react.useaddress#useaddress-function](https://portal.thirdweb.com/react/react.useaddress#useaddress-function)<br>
+the useMetamask hook will return the connect function, which will be used to connect to the wallet.[https://portal.thirdweb.com/react/react.usemetamask](https://portal.thirdweb.com/react/react.usemetamask)<br>
+
+So now we add the following code to the index.jsx file in the context folder:
+
+```javascript
+export const StateContextProvider = ({ children }) => {
+    const { contract } = useContract('0x4C0CC6b2075BcD0845A40064fA2B5f5823A50E70');
+    const { mutateAsync: createCampaign } = useContractWrite(contract, 'createCampaign');
+    
+   const address = useAddress();
+   const connect = useMetamask();
+
+} //end of statecontextprovider
+```
+We now need a function to send the data from our form to the blockchain, so we create a function called "publishCampaign" and we add the following code to it:<br>
+
+```javascript
+
+    const publishCampaign = async (form) => {
+
+        try {
+            const data = await createCampaign([
+                address, //owner
+                form.title, //title
+                form.description, //description
+                form.target, //goal
+                new Date(form.deadline).getTime()/1000, //deadline
+                form.image, //image
+
+            ]);
+            console.log("contract call success ", data);
+        } catch (error) {
+            console.log("contract call failure ", error);
+        }
+    }
+
+} //end of statecontextprovider
+export const useStateContext = () => useContext(StateContext);
+```
+see that we add a line at the end of the file below the closure of the statecontextprovider, which is the export of the useStateContext hook.<br>
+this hook will be used to access the state of the context.<br>
+
+but our context is not yet ready it has to return some values, it return a StateContext.Provider, which is a react component.<br>
+and this component has a value prop, which is an object, and this object will contain the values that we want to return.<br>
+each value will be accessible to all components wrapped in the StateContextProvider.<br>
+So we add the following code to the statecontextprovider:
+
+```javascript
+return (
+        <StateContext.Provider value={{ 
+            address, 
+            contract,
+            connect, 
+            createCampaign: publishCampaign,
+             }}
+             >
+            {children}
+        </StateContext.Provider>
+    )
+
+
+} //end of statecontextprovider
+export const useStateContext = () => useContext(StateContext);
+```
+
+The line createCampaign: publishCampaign, is a rename for createCampaign in our smartcontract : publishCampaign in the front end.<br>
+
+So now we have to wrap our app in the StateContextProvider, so we go to the file "src/main.jsx" and we add the following code:
+
+```javascript
+import { StateContextProvider } from './context';
+
+```
+
+and the root render function should look like this:
+
+```javascript
+root.render(
+    <ThirdwebProvider desiredChainId={ChainId.Goerli}>
+        <Router>
+        <StateContextProvider>
+            <App />
+        </StateContextProvider>
+        </Router>
+
+    </ThirdwebProvider>
+);
+```
+That's it, we have now created the context, and we have wrapped our app in the context provider.<br>
+As simple as that.<br>
+now we need to use it in our create campaign form.<br>
+so we go to the createCampaign.jsx file in the pages folder and we add the following code in the beginning of the file:
+
+```javascript
+import { useStateContext } from '../context';
+
+```
+then we addt the following code const {CreateCampaign} = useStateContext(); to the createCampaign function:
+
+```javascript
+const CreateCampaign = () => {
+  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
+  const {CreateCampaign} = useStateContext();
+  const  [form, setForm] = useState({
+    name: '',
+    title: '',
+    description: '',
+    image: '',
+    target: '',
+    deadline: '',       
+
+  });
+```
+
 
 
 We now go through the home page, which is the dashboard, and we will be building the campaign cards, and the campaign card details.<br>

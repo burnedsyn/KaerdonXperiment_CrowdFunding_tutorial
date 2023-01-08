@@ -1,15 +1,17 @@
 import React, {useState} from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useStateContext } from '../context';
+
 import { CustomButton } from './';
 import { logo, menu, search, thirdweb, old_profile } from '../assets';
 import { navlinks } from '../constants';
-
 
 const Navbar = () => {
   const navigate = useNavigate();
   const [isActive, setIsActive] = useState('dashboard');
   const [toggleDrawer, setToggleDrawer] = useState(false);
-  const address='0x123ff112'
+  const {connect, address} = useStateContext();
+  
 
 
   return (
@@ -29,20 +31,20 @@ const Navbar = () => {
             if(address) {
               navigate('/create-campaign')
             } else {
-              'connect()'
+              connect()
             }//fin else
           }}
         />
         <Link to='/profile'>
           <div className='w-[52px] h-[52px] rounded-full flex justify-center items-center bg-secondary cursor-pointer shadow-custom'>
-            <img src={old_profile} alt="" className='grayscale' />
+            <img src={thirdweb} alt="" className='w-[60%] h-[60%]' />
           </div>
         </Link>
       </div>
       {/* small screen nav*/}
       <div className="sm:hidden flex flex-row justify-between items-center relative">
           <div className='w-[40px] h-[40px] rounded-[10px] flex justify-center items-center bg-secondary cursor-pointer '>
-            <img src={old_profile} alt="" className='grayscale'/>
+            <img src={logo} alt="" className='w-[60%] h-[60%] grayscale'/>
           </div>  
           <img 
             src={menu}
@@ -84,7 +86,7 @@ const Navbar = () => {
                 if(address) {
                   navigate('/create-campaign')
                 } else {
-                  'connect()'
+                  connect()
                 }//fin else
                  }}
               />

@@ -1521,7 +1521,7 @@ And finally we need to import this file in the main.jsx file, so in the main.jsx
 ```javascript
 import './index.css';
 ```
-
+### A first run
 you can go now to the src folder and open the App.js file and replace the content by the following code:
 
 ```javascript
@@ -1553,6 +1553,8 @@ open the link in the browser and you will see the following result:
 ![image](./images/firstrun.png)
 
 As we see the bold and underline text is the one we added in the App.js file. and if we view the bold and underline effect it means that tailwindcss is working.
+
+
 
 Now we can add the assets folder in the src folder and add the downloaded files from this [link here](./files/assets.zip "assets")
 
@@ -1840,12 +1842,12 @@ Before we go further with Navbar.jsx we need to create a new component called Cu
 ```javascript
 import React from 'react'
 
-const CustomButton = ({btnType, title, handleclick, styles }) => {
+const CustomButton = ({btnType, title, handleClick, styles }) => {
   return (
     <button
       type={btnType}
       className={`font-epilogue font-semibold text-[16px] leading-[26px] text-nine min-h-[52px] px-4 rounded-[20px] ${styles}`}
-      onClick={handleclick}
+      onClick={handleClick}
     >
       {title}
     </button>
@@ -2313,6 +2315,82 @@ export default CreateCampaign
 look at this with the tiny mce rich text editor activated in it we will do it in a second.
 
 ![image](./images/formcomplettinymce.png)
+
+To add tiny mce rich text editor we will use the react-tinymce package, so we install it with the following command in the terminal:
+
+```bash
+npm install @tinymce/tinymce-react
+```
+and in formfield.jsx we add the following code:
+
+```javascript
+import { Editor } from '@tinymce/tinymce-react'
+```
+
+To get it quick we will modify a bit the formfield.jsx file, so we add the following code:
+
+```javascript
+return (
+    <label className="flex-1 w-full flex flex-col" >
+        { labelName && (
+            <span className="font-epilogue font-medium text-[14px] leading-[22px] text-[#808191] mb-[10px]">{labelName}</span>
+        )}
+        {isTextArea ? (
+            <Editor 
+            required 
+            value={value}
+            onChange={handleChange}
+            rows={10}
+            placeholder={placeholder}
+            className="font-epilogue font-medium text-white text-[14px] leading-[22px] palceholder:text-[#4b5264] bg-[#3a3a43] rounded-[10px] px-[15px] outline-none"
+            styles="tiny"
+            />
+        ) : (
+            <input
+            required
+            value= {value}
+            onChange={handleChange}
+            type={inputType}
+            step="0.1"
+            placeholder={placeholder}
+            className="font-epilogue font-medium text-white text-[14px] leading-[22px] palceholder:text-[#4b5264] bg-[#3a3a43] rounded-[10px] px-[15px] outline-none"
+            />
+        )}
+        
+```
+So we had modified the textarea in a Editor field, thus enabling the rich text editor.<br>
+
+our form is ready, we are now going to add the blockchain logic to it.<br>
+For this we need to be connected to the blockchain, so we will use the metamask wallet.<br>
+and we will use the web3 library to interact with the blockchain.<br>
+with thirdweb you'll see it isn't too much complicated.<br>
+
+### Context and web3
+
+So in the context folder we create a new file "index.jsx" and we add the following code:
+
+```javascript
+import React, { createContext, useContext } from 'react';
+
+import { useAddress, useContract, useMetamask, useContractWrite} from '@thirdweb-dev/react';
+
+import { ethers } from 'ethers';
+
+const StateContext = createContext();
+
+```
+We import the useContext and createContext hook from the react library.<br>
+the context documentation can be accessed from 
+[https://reactjs.org/docs/context.html](https://reactjs.org/docs/context.html)<br>
+Then we import the useAddress, useContract, useMetamask, useContractWrite hooks from the thirdweb library.<br>
+more information about the hooks can be found here: [https://portal.thirdweb.com/react/](https://portal.thirdweb.com/react/)  <br>
+
+there you can search for the hooks and find the documentation for each one of them.<br>
+
+we will need the contract address, so we go to the dashboard of thirdweb and we copy the contract address.<br>
+![image](./images/contractaddress.png)
+
+
 
 We now go through the home page, which is the dashboard, and we will be building the campaign cards, and the campaign card details.<br>
 so we open the file "src/pages/Home.jsx" and we add the following code:

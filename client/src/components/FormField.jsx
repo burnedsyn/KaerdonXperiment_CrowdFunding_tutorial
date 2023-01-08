@@ -8,14 +8,14 @@ const FormField = ({labelName, placeholder, inputType, isTextArea, value, handle
             <span className="font-epilogue font-medium text-[14px] leading-[22px] text-[#808191] mb-[10px]">{labelName}</span>
         )}
         {isTextArea ? (
-            <Editor 
+            <Editor
             required 
             value={value}
             onChange={handleChange}
             rows={10}
             placeholder={placeholder}
             className="font-epilogue font-medium text-white text-[14px] leading-[22px] palceholder:text-[#4b5264] bg-[#3a3a43] rounded-[10px] px-[15px] outline-none"
-            
+            styles="tiny"
             />
         ) : (
             <input

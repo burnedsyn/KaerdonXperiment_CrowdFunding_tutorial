@@ -14,9 +14,10 @@ const Icon = ({styles, name, imgUrl, isActive, disabled, handleClick}) => (
     </div>
 )
 
-const Sidebar = () => {
-    const navigate = useNavigate();
+const Sidebar = ({ activeLink }) => {
+  const navigate = useNavigate();
   const [isActive, setIsActive] = useState('dashboard');
+
   return (
     <div className="flex justify-between items-center flex-col sticky top-5 h-[93vh] ">
         <Link to="/">
@@ -38,7 +39,7 @@ const Sidebar = () => {
             />
           ))}
         </div>
-            <Icon styles="bg-white grayscale" imgUrl={sun} />
+            <Icon styles="grayscale" imgUrl={sun} />
         </div>
     </div>
   )

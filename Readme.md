@@ -5,6 +5,13 @@
 
 #### vous pouvez aussi lire ce tutoriel en français ici: [Créer une plateforme de financement participatif Web3 sécurisée et digne de confiance avec QuickNode, Solidity, le Protocol Orbis et les informations d'identification vérifiables](./Tutorial_fr.md "Version française")
 
+
+Table of Contents
+[part 1](#starting-the-app)<br>
+[part 2](#creating-the-app)<br>
+[part 3](#context-and-web3)<br>
+
+
 ## Introduction 
 
 Welcome to this tutorial on building a secure and trustworthy web3 crowdfunding platform using QuickNode, React, Solidity, the Orbis Protocol.
@@ -1521,7 +1528,7 @@ And finally we need to import this file in the main.jsx file, so in the main.jsx
 ```javascript
 import './index.css';
 ```
-
+### A first run
 you can go now to the src folder and open the App.js file and replace the content by the following code:
 
 ```javascript
@@ -1553,6 +1560,8 @@ open the link in the browser and you will see the following result:
 ![image](./images/firstrun.png)
 
 As we see the bold and underline text is the one we added in the App.js file. and if we view the bold and underline effect it means that tailwindcss is working.
+
+
 
 Now we can add the assets folder in the src folder and add the downloaded files from this [link here](./files/assets.zip "assets")
 
@@ -1840,12 +1849,12 @@ Before we go further with Navbar.jsx we need to create a new component called Cu
 ```javascript
 import React from 'react'
 
-const CustomButton = ({btnType, title, handleclick, styles }) => {
+const CustomButton = ({btnType, title, handleClick, styles }) => {
   return (
     <button
       type={btnType}
       className={`font-epilogue font-semibold text-[16px] leading-[26px] text-nine min-h-[52px] px-4 rounded-[20px] ${styles}`}
-      onClick={handleclick}
+      onClick={handleClick}
     >
       {title}
     </button>
@@ -2310,15 +2319,297 @@ const CreateCampaign = () => {
 
 export default CreateCampaign
 ```
+look at this with the tiny mce rich text editor activated in it we will do it in a second.
+
+![image](./images/formcomplettinymce.png)
+
+To add tiny mce rich text editor we will use the react-tinymce package, so we install it with the following command in the terminal:
+
+```bash
+npm install @tinymce/tinymce-react
+```
+and in formfield.jsx we add the following code:
+
+```javascript
+import { Editor } from '@tinymce/tinymce-react'
+```
+
+To get it quick we will modify a bit the formfield.jsx file, so we add the following code:
+
+```javascript
+return (
+    <label className="flex-1 w-full flex flex-col" >
+        { labelName && (
+            <span className="font-epilogue font-medium text-[14px] leading-[22px] text-[#808191] mb-[10px]">{labelName}</span>
+        )}
+        {isTextArea ? (
+            <Editor 
+            required 
+            value={value}
+            onChange={handleChange}
+            rows={10}
+            placeholder={placeholder}
+            className="font-epilogue font-medium text-white text-[14px] leading-[22px] palceholder:text-[#4b5264] bg-[#3a3a43] rounded-[10px] px-[15px] outline-none"
+            styles="tiny"
+            />
+        ) : (
+            <input
+            required
+            value= {value}
+            onChange={handleChange}
+            type={inputType}
+            step="0.1"
+            placeholder={placeholder}
+            className="font-epilogue font-medium text-white text-[14px] leading-[22px] palceholder:text-[#4b5264] bg-[#3a3a43] rounded-[10px] px-[15px] outline-none"
+            />
+        )}
+        
+```
+So we had modified the textarea in a Editor field, thus enabling the rich text editor.<br>
+
+our form is ready, we are now going to add the blockchain logic to it.<br>
+For this we need to be connected to the blockchain, so we will use the metamask wallet.<br>
+and we will use the web3 library to interact with the blockchain.<br>
+with thirdweb you'll see it isn't too much complicated.<br>
+
+### Context and web3
+
+So in the context folder we create a new file "index.jsx" and we add the following code:
+
+```javascript
+import React, { createContext, useContext } from 'react';
+
+import { useAddress, useContract, useMetamask, useContractWrite} from '@thirdweb-dev/react';
+
+import { ethers } from 'ethers';
+
+const StateContext = createContext();
+
+```
+We import the useContext and createContext hook from the react library.<br>
+the context documentation can be accessed from 
+[https://reactjs.org/docs/context.html](https://reactjs.org/docs/context.html)<br>
+Then we import the useAddress, useContract, useMetamask, useContractWrite hooks from the thirdweb library.<br>
+more information about the hooks can be found here: [https://portal.thirdweb.com/react/](https://portal.thirdweb.com/react/)  <br>
+
+there you can search for the hooks and find the documentation for each one of them.<br>
+
+we will need the contract address, so we go to the dashboard of thirdweb and we copy the contract address.<br>
+![image](./images/contractaddress.png)
+
+Now we can create the context provider, and doing so we declare the contract address, and the contract.<br>
+We also declare the createCampaign function, which will be used to create a new campaign.<br>
+This function will mutate the state of the contract.<br>
+
+We then declare the two const address and connect, which are hooks that will be used to with your metamask wallet.<br>
+the useAddress hook will return the address of the connected wallet.[https://portal.thirdweb.com/react/react.useaddress#useaddress-function](https://portal.thirdweb.com/react/react.useaddress#useaddress-function)<br>
+the useMetamask hook will return the connect function, which will be used to connect to the wallet.[https://portal.thirdweb.com/react/react.usemetamask](https://portal.thirdweb.com/react/react.usemetamask)<br>
+
+So now we add the following code to the index.jsx file in the context folder:
+
+```javascript
+export const StateContextProvider = ({ children }) => {
+    const { contract } = useContract('0x4C0CC6b2075BcD0845A40064fA2B5f5823A50E70');
+    const { mutateAsync: createCampaign } = useContractWrite(contract, 'createCampaign');
+    
+   const address = useAddress();
+   const connect = useMetamask();
+
+} //end of statecontextprovider
+```
+We now need a function to send the data from our form to the blockchain, so we create a function called "publishCampaign" and we add the following code to it:<br>
+
+```javascript
+
+    const publishCampaign = async (form) => {
+
+        try {
+            const data = await createCampaign([
+                address, //owner
+                form.title, //title
+                form.description, //description
+                form.target, //goal
+                new Date(form.deadline).getTime()/1000, //deadline
+                form.image, //image
+
+            ]);
+            console.log("contract call success ", data);
+        } catch (error) {
+            console.log("contract call failure ", error);
+        }
+    }
+
+} //end of statecontextprovider
+export const useStateContext = () => useContext(StateContext);
+```
+see that we add a line at the end of the file below the closure of the statecontextprovider, which is the export of the useStateContext hook.<br>
+this hook will be used to access the state of the context.<br>
+
+but our context is not yet ready it has to return some values, it return a StateContext.Provider, which is a react component.<br>
+and this component has a value prop, which is an object, and this object will contain the values that we want to return.<br>
+each value will be accessible to all components wrapped in the StateContextProvider.<br>
+So we add the following code to the statecontextprovider:
+
+```javascript
+return (
+        <StateContext.Provider value={{ 
+            address, 
+            contract,
+            connect, 
+            createCampaign: publishCampaign,
+             }}
+             >
+            {children}
+        </StateContext.Provider>
+    )
+
+
+} //end of statecontextprovider
+export const useStateContext = () => useContext(StateContext);
+```
+
+The line createCampaign: publishCampaign, is a rename for createCampaign in our smartcontract : publishCampaign in the front end.<br>
+
+So now we have to wrap our app in the StateContextProvider, so we go to the file "src/main.jsx" and we add the following code:
+
+```javascript
+import { StateContextProvider } from './context';
+
+```
+
+and the root render function should look like this:
+
+```javascript
+root.render(
+    <ThirdwebProvider desiredChainId={ChainId.Goerli}>
+        <Router>
+        <StateContextProvider>
+            <App />
+        </StateContextProvider>
+        </Router>
+
+    </ThirdwebProvider>
+);
+```
+That's it, we have now created the context, and we have wrapped our app in the context provider.<br>
+As simple as that.<br>
+now we need to use it in our create campaign form.<br>
+so we go to the createCampaign.jsx file in the pages folder and we add the following code in the beginning of the file:
+
+```javascript
+import { useStateContext } from '../context';
+
+```
+then we addt the following code const {CreateCampaign} = useStateContext(); to the createCampaign function:
+
+```javascript
+const CreateCampaign = () => {
+  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
+  const {CreateCampaign} = useStateContext();
+  const  [form, setForm] = useState({
+    name: '',
+    title: '',
+    description: '',
+    image: '',
+    target: '',
+    deadline: '',       
+
+  });
+```
+we have one last thing to do before trying to publish a campaign, and that is to connect to metamask.<br>
+so we go to our navbar.jsx file in the components folder and 
+we add this import statement
+```javascript
+import { useStateContext } from '../context';
+
+```
+we then add the following code to the navbar function:
+
+```javascript
+const {connect, address} = useStateContext();
+```
+
+
+we modify the following code to the navbar function:
+
+```javascript
+
+<CustomButton 
+                btnType="button"
+                title={ address ? 'create campaign' : 'connect wallet'}  
+                styles={address ? 'bg-fourth  text-nine' : 'bg-fourth text-[#FF0000]'} 
+                handleClick={() => {
+                if(address) {
+                  navigate('/create-campaign')
+                } else {
+                  connect()
+                }//fin else
+                 }}
+              />
+
+```
+Look we just changed the code in the else statement, so that it calls the connect function from the context.<br>
+and not just 'connect()' as a string.<br>
+We have to do it two times in this file, and we need to remove the hardcoded address.<br>
+const address='0xsomething';<br>
+
+when you have done this, you can try to connect and then publish a campaign.<br>
+when you have published a campaign, you will see in your dashboard at thirdweb.com in the event that the campaign has been created.<br>
+
+![image](./images/thirdwebevent.png)
+
 
 We now go through the home page, which is the dashboard, and we will be building the campaign cards, and the campaign card details.<br>
 so we open the file "src/pages/Home.jsx" and we add the following code:
 
 ```javascript
+import React, {useState, useEffect} from 'react';
+import { useStateContext } from '../context';
 
+const Homes = () => {
+const [isLoading, setIsLoading] = useState(false);
+const [campaigns, setCampaigns] = useState([]);
+
+const { address, contract, getCampaigns } = useStateContext();
+
+
+  return (
+    <div>
+
+      
+    </div>
+  )
+}
+
+export default Homes
 
 ```
+At this point we need to go back to our context and add the getCampaigns function.<br>
+so we go to the file "src/context/index.jsx" and we add the following code:
 
+```javascript
+    const getCampaigns = async () => {
+        try {
+            const data = await contract.call('getCampaigns');
+            const parsedCampaigns = data.map((campaign,i) => ({
+                owner: campaign.owner,
+                title: campaign.title,
+                description: campaign.description,
+                target: ethers.utils.formatEther(campaign.target.toString()),
+                deadline: campaign.deadline.toNumber(),
+                amountCollected: ethers.utils.formatEther(campaign.amountCollected.toString()),
+                image: campaign.image,
+                pId: i
+                
+            }));
+            return parsedCampaigns;
+        } catch (error) {
+            console.log("contract call failure ", error);
+        }
+    }
+
+```
 
 
 ## Author bio

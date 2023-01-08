@@ -5,6 +5,13 @@
 
 #### vous pouvez aussi lire ce tutoriel en français ici: [Créer une plateforme de financement participatif Web3 sécurisée et digne de confiance avec QuickNode, Solidity, le Protocol Orbis et les informations d'identification vérifiables](./Tutorial_fr.md "Version française")
 
+
+Table of Contents
+[part 1](#starting-the-app)<br>
+[part 2](#creating-the-app)<br>
+[part 3](#context-and-web3)<br>
+
+
 ## Introduction 
 
 Welcome to this tutorial on building a secure and trustworthy web3 crowdfunding platform using QuickNode, React, Solidity, the Orbis Protocol.
@@ -2510,17 +2517,99 @@ const CreateCampaign = () => {
 
   });
 ```
+we have one last thing to do before trying to publish a campaign, and that is to connect to metamask.<br>
+so we go to our navbar.jsx file in the components folder and 
+we add this import statement
+```javascript
+import { useStateContext } from '../context';
 
+```
+we then add the following code to the navbar function:
+
+```javascript
+const {connect, address} = useStateContext();
+```
+
+
+we modify the following code to the navbar function:
+
+```javascript
+
+<CustomButton 
+                btnType="button"
+                title={ address ? 'create campaign' : 'connect wallet'}  
+                styles={address ? 'bg-fourth  text-nine' : 'bg-fourth text-[#FF0000]'} 
+                handleClick={() => {
+                if(address) {
+                  navigate('/create-campaign')
+                } else {
+                  connect()
+                }//fin else
+                 }}
+              />
+
+```
+Look we just changed the code in the else statement, so that it calls the connect function from the context.<br>
+and not just 'connect()' as a string.<br>
+We have to do it two times in this file, and we need to remove the hardcoded address.<br>
+const address='0xsomething';<br>
+
+when you have done this, you can try to connect and then publish a campaign.<br>
+when you have published a campaign, you will see in your dashboard at thirdweb.com in the event that the campaign has been created.<br>
+
+![image](./images/thirdwebevent.png)
 
 
 We now go through the home page, which is the dashboard, and we will be building the campaign cards, and the campaign card details.<br>
 so we open the file "src/pages/Home.jsx" and we add the following code:
 
 ```javascript
+import React, {useState, useEffect} from 'react';
+import { useStateContext } from '../context';
 
+const Homes = () => {
+const [isLoading, setIsLoading] = useState(false);
+const [campaigns, setCampaigns] = useState([]);
+
+const { address, contract, getCampaigns } = useStateContext();
+
+
+  return (
+    <div>
+
+      
+    </div>
+  )
+}
+
+export default Homes
 
 ```
+At this point we need to go back to our context and add the getCampaigns function.<br>
+so we go to the file "src/context/index.jsx" and we add the following code:
 
+```javascript
+    const getCampaigns = async () => {
+        try {
+            const data = await contract.call('getCampaigns');
+            const parsedCampaigns = data.map((campaign,i) => ({
+                owner: campaign.owner,
+                title: campaign.title,
+                description: campaign.description,
+                target: ethers.utils.formatEther(campaign.target.toString()),
+                deadline: campaign.deadline.toNumber(),
+                amountCollected: ethers.utils.formatEther(campaign.amountCollected.toString()),
+                image: campaign.image,
+                pId: i
+                
+            }));
+            return parsedCampaigns;
+        } catch (error) {
+            console.log("contract call failure ", error);
+        }
+    }
+
+```
 
 
 ## Author bio

@@ -1,4 +1,3 @@
-<link rel="stylesheet" href="./myStyle.css">
 
 
 # Building a secure and trustworthy Web3 Crowdfunding Platform with QuickNode, Solidity, Orbis Protocol and verifiable credentials.
@@ -6,10 +5,10 @@
 #### vous pouvez aussi lire ce tutoriel en français ici: [Créer une plateforme de financement participatif Web3 sécurisée et digne de confiance avec QuickNode, Solidity, le Protocol Orbis et les informations d'identification vérifiables](./Tutorial_fr.md "Version française")
 
 
-Table of Contents
-[part 1](#starting-the-app)<br>
-[part 2](#creating-the-app)<br>
-[part 3](#context-and-web3)<br>
+Table of Contents<br>
+[part 1 the starting point and the base of the  contract](#starting-the-app)<br>
+[part 2 The client side of thing](#creating-the-app)<br>
+[part 3 Enabling web3 within the app using context](#context-and-web3)<br>
 
 
 ## Introduction 
@@ -2319,53 +2318,6 @@ const CreateCampaign = () => {
 
 export default CreateCampaign
 ```
-look at this with the tiny mce rich text editor activated in it we will do it in a second.
-
-![image](./images/formcomplettinymce.png)
-
-To add tiny mce rich text editor we will use the react-tinymce package, so we install it with the following command in the terminal:
-
-```bash
-npm install @tinymce/tinymce-react
-```
-and in formfield.jsx we add the following code:
-
-```javascript
-import { Editor } from '@tinymce/tinymce-react'
-```
-
-To get it quick we will modify a bit the formfield.jsx file, so we add the following code:
-
-```javascript
-return (
-    <label className="flex-1 w-full flex flex-col" >
-        { labelName && (
-            <span className="font-epilogue font-medium text-[14px] leading-[22px] text-[#808191] mb-[10px]">{labelName}</span>
-        )}
-        {isTextArea ? (
-            <Editor 
-            required 
-            value={value}
-            onChange={handleChange}
-            rows={10}
-            placeholder={placeholder}
-            className="font-epilogue font-medium text-white text-[14px] leading-[22px] palceholder:text-[#4b5264] bg-[#3a3a43] rounded-[10px] px-[15px] outline-none"
-            styles="tiny"
-            />
-        ) : (
-            <input
-            required
-            value= {value}
-            onChange={handleChange}
-            type={inputType}
-            step="0.1"
-            placeholder={placeholder}
-            className="font-epilogue font-medium text-white text-[14px] leading-[22px] palceholder:text-[#4b5264] bg-[#3a3a43] rounded-[10px] px-[15px] outline-none"
-            />
-        )}
-        
-```
-So we had modified the textarea in a Editor field, thus enabling the rich text editor.<br>
 
 our form is ready, we are now going to add the blockchain logic to it.<br>
 For this we need to be connected to the blockchain, so we will use the metamask wallet.<br>
@@ -2585,6 +2537,7 @@ const { address, contract, getCampaigns } = useStateContext();
 export default Homes
 
 ```
+
 At this point we need to go back to our context and add the getCampaigns function.<br>
 so we go to the file "src/context/index.jsx" and we add the following code:
 
@@ -2609,7 +2562,171 @@ so we go to the file "src/context/index.jsx" and we add the following code:
         }
     }
 
+
 ```
+This function is pretty straight forward, we are just calling the getCampaigns function from our smart contract.<br>
+Then we are parsing the data and returning it in an array.<br>
+It is quite simple to call the contract look at the const data = await contract.call('getCampaigns'); line.<br>
+and then we parse the data and return it, and we are done.<br>
+The catch statement is just there to catch any errors.<br>
+we just have to export our getCampaigns function, so we add the following line to the end of the file:
+
+```javascript
+return (
+        <StateContext.Provider value={{ 
+            address, 
+            contract,
+            connect, 
+            CreateCampaign: publishCampaign,
+            getCampaigns,
+            
+             }}
+             >
+            {children}
+        </StateContext.Provider>
+    )
+}
+  
+  ```
+
+Now we go back to our home.jsx file and we add code to the Homes function to call the getCampaigns function.<br>:
+
+```javascript
+import React, { useState, useEffect}from 'react'
+import { useStateContext } from '../context'
+import {DisplayCampaigns} from '../components'
+
+const Home = () => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [campaigns, setCampaigns] = useState([]);
+  const { address, contract, getCampaigns } = useStateContext();
+  const fetchCampaigns = async () => {
+    try {
+      setIsLoading(true);
+      const data = await getCampaigns();
+      setCampaigns(data);
+      setIsLoading(false);
+    } catch (error) {
+      console.log("contract call failure ", error);
+    }
+  };
+  useEffect(() => {
+     if(contract) fetchCampaigns();
+
+  }, [address,contract]);
+  return (
+    <DisplayCampaigns 
+    title="All Campaigns"
+    isLoading={isLoading}
+    campaigns={campaigns}
+    
+    />
+  )
+}
+
+export default Home
+```
+We need to create the component that will display the campaigns.<br>
+so we create the file "src/components/DisplayCampaigns.jsx" and we add the following code:
+
+```javascript
+import React from 'react'
+import { useNavigate } from 'react-router-dom'
+import { loader } from '../assets'
+import FundCard from './FundCard'
+const DisplayCampaigns = ({title, isLoading, campaigns}) => {
+  const navigate = useNavigate();
+  const handleNavigate = (campaign) => {
+    navigate(`/campaign-details/${campaign.title}`, {state: campaign})
+  }
+  return (
+    
+    <div>
+        <h1 className="font-epilogue  font-semibold text-[18px] text-white text-left">{title} {campaigns.length}</h1>
+        <div className="flex flex-wrap mt-[20px] gap-[26px]">
+            {isLoading && (<img src={loader} alt="loader" className="w-[100px] h-[100px] object-contain"  />
+            )}
+
+            {!isLoading && campaigns.length === 0 && (
+              <p className="font-epilogue font-semibold text-[14px] leading-[30px] text-[#818183] text-left">No Campaigns</p>
+            )} 
+
+            {!isLoading && campaigns.length > 0 && campaigns.map((campaign) => <FundCard
+              key={campaign.pId}
+              {...campaign}
+              handleClick={() => handleNavigate(campaign)}
+            
+            />)} 
+        </div>
+    </div>
+  )
+}
+
+export default DisplayCampaigns
+
+```
+
+We are using the FundCard component to display the campaigns.<br>
+
+so we create the file "src/components/FundCard.jsx" and we add the following code:
+
+```javascript
+import React from 'react'
+import { tagType, thirdweb } from '../assets'
+import {daysLeft} from '../utils'
+
+const FundCard = ({owner, title, description, target, deadline, amountCollected, image, handleClick}) => {
+  const remainingDays = daysLeft(deadline);
+    return (
+    <div className="sm:w-[288px] w-full rounde[15px] bg-secondary cursor-pointer" onClick={handleClick}  >
+        <img src={image} alt={['fund the project ', title]}
+        className="w-full h-[158px] object-cover rounded-[15px]" />
+        <div className='flex flex-col p-4' >
+            <div className="flex flex-row items-center mb-[18px]">
+            <img src={tagType} alt="tag" className="w-[17px] h-[17px] object-contain" />
+            <p className="font-epilogue font-medium text-[12px] text-[#808191] text-left ml-[12px] mt-[2px]">Education</p>
+            </div>
+
+            <div className='block'>
+                <h3 className="font-epilogue font-semibold text-[16px] text-white text-left leading-[26px] truncate">{title}</h3>
+                <p className="mt-[5px] font-epilogue font-normal font-[12px] text-[#808191] text-left truncate">{description}</p>
+            </div>
+
+            <div className="flex flex-wrap gap-2 justify-between mt-[15px]">
+                <div className="flex flex-col">
+                    <h4 className="font-epilogue font-semibold font-[14px] text-[#b2b3bd]  leading-[22px]">{amountCollected} </h4>
+                    <p className="mt-[3px] font-epilogue font-normal font-[12px] text-[#808191] leading-[18px] sm:max-w-[120px] truncate">Raised of {target}</p>
+                </div>
+                <div className="flex flex-col">
+                    <h4 className="font-epilogue font-semibold font-[14px] text-[#b2b3bd]  leading-[22px] ">{remainingDays} </h4>
+                    <p className="mt-[3px] font-epilogue font-normal font-[12px] text-[#808191] leading-[18px] sm:max-w-[120px]  truncate ">Days Left</p>
+                </div>
+            </div>
+            <div className="flex items-center mt-[20px] gap-[12px]">
+                <div className="w-[30px] h-[30px] rounded-full flex justify-center items-center bg-[13131a]">
+                    <img src={thirdweb} alt="user" className="w-1/2 h-1/2 object-contain" />
+                </div>
+                <p className="flex-1 font-epilogue font-normal text-[12px] text-[#808191] truncate">by <span className="text-[#b2b3bd]">{owner}</span></p>
+            </div>
+        </div>
+    </div>
+  ) 
+}
+
+export default FundCard
+
+```
+then we need to modify the src/components/index.js file to export the new component
+
+```javascript
+export { default as DisplayCampaigns } from './DisplayCampaigns'
+export { default as FundCard } from './FundCard'
+
+```
+that's it, we are done with the FundCard component.<br> and we can now use it in the DisplayCampaigns component.<br>
+so we can take a look at our first campaign in our dashboard.<br>
+
+the next step is to create the CampaignDetails component.<br>
 
 
 ## Author bio

@@ -8,7 +8,7 @@ const FormField = ({labelName, placeholder, inputType, isTextArea, value, handle
             <span className="font-epilogue font-medium text-[14px] leading-[22px] text-[#808191] mb-[10px]">{labelName}</span>
         )}
         {isTextArea ? (
-            <Editor
+            <textarea
             required 
             value={value}
             onChange={handleChange}
